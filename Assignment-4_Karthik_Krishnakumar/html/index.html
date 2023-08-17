@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Weather App</h1>
+    <div id="weather-container"></div>
+
+    <script>
+        const apiKey = '172fc37a96df4bf743c840979c39aca7';
+
+        const cities = [
+            { name: 'Toronto,ca', elementId: 'toronto' },
+            { name: 'Thrissur,india', elementId: 'thrissur' },
+            { name: 'Barcelona,es', elementId: 'barcelona' }
+        ];
+
+        $(document).ready(function() {
+            cities.forEach(city => {
+                const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city.name}&units=metric&appid=${apiKey}`;
+                $.getJSON(apiUrl, function(data) {
+                    const location = data.name;
+                    const weather = data.weather[0].description;
+                    const temperature = data.main.temp;
+                    const iconCode = data.weather[0].icon;
+                    const iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
+
+                    const weatherInfo = `
+                        <div class="city-weather" id="${city.elementId}">
+                            <h2 class="city-header">${location}</h2>
+                            <p><strong>Current Weather Conditions:</strong> ${weather}</p>
+                            <p><strong>Temperature:</strong> ${temperature} °C</p>
+                            <img class="weather-icon" src="${iconUrl}" alt="Weather Icon">
+                        </div>
+                    `;
+
+                    $('#weather-container').append(weatherInfo);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
