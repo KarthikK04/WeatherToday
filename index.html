@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Weather App</h1>
+    <div id="weather-container"></div>
+
+    <script>
+        const apiKey = '172fc37a96df4bf743c840979c39aca7';
+
+        const cities = [
+            { name: 'Toronto,ca', elementId: 'toronto' },
+            { name: 'Thrissur,india', elementId: 'thrissur' },
+            { name: 'Barcelona,es', elementId: 'barcelona' }
+        ];
+
+        $(document).ready(function() {
+            cities.forEach(city => {
+                const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city.name}&units=metric&appid=${apiKey}`;
+                $.getJSON(apiUrl, function(data) {
+                    const location = data.name;
+                    const weather = data.weather[0].description;
+                    const temperature = data.main.temp;
+                    const iconCode = data.weather[0].icon;
+                    const iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
+
+                    const weatherInfo = `
+                        <div class="city-weather" id="${city.elementId}">
+                            <h2 class="city-header">${location}</h2>
+                            <p><strong>Current Weather Conditions:</strong> ${weather}</p>
+                            <p><strong>Temperature:</strong> ${temperature} °C</p>
+                            <img class="weather-icon" src="${iconUrl}" alt="Weather Icon">
+                        </div>
+                    `;
+
+                    $('#weather-container').append(weatherInfo);
+                });
+            });
+        });
+    </script>
+    <style>
+        /*Importa*/
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap');
+
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-image: url('../img/Cloud_bg.jpg'); 
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+h1 {
+    font-family: Merriweather;
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg,#e091ee, #8edde9);
+    color: #fff;
+    border-radius: 10px; 
+    margin: 20px auto 0; }
+
+#weather-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+
+.city-weather {
+    background: linear-gradient(135deg, #e091ee, #8edde9); 
+    color: #333; 
+    border-radius: 10px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px;
+    text-align: center;
+    max-width: 300px;
+    overflow: hidden; 
+}
+
+.city-header {
+    color: white;
+}
+
+.weather-icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+}
+    </style>
+</body>
+</html>
